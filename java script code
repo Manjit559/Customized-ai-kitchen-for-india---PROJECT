@@ -1,0 +1,81 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function RecipeGenerator() {
+  const [recipe, setRecipe] = useState({});
+  const [ingredients, setIngredients] = useState([]);
+  const [mealType, setMealType] = useState('');
+  const [cookingTime, setCookingTime] = useState('');
+  const [complexity, setComplexity] = useState('');
+
+  const handleGenerateRecipe = async () => {
+    const response = await axios.post('/api/generate-recipe', {
+      ingredients,
+      mealType,
+      cookingTime,
+      complexity,
+    });
+    setRecipe(response.data);
+  };
+
+  return (
+    <div>
+      <h2>Recipe Generator</h2>
+      <form>
+        <label>
+          Ingredients:
+          <input
+            type="text"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Meal Type:
+          <select
+            value={mealType}
+            onChange={(e) => setMealType(e.target.value)}
+          >
+            <option value="">Select Meal Type</option>
+            <option value="Veg">Veg</option>
+            <option value="Non-Veg">Non-Veg</option>
+          </select>
+        </label>
+        <br />
+        <label>
+          Cooking Time:
+          <input
+            type="number"
+            value={cookingTime}
+            onChange={(e) => setCookingTime(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Complexity:
+          <select
+            value={complexity}
+            onChange={(e) => setComplexity(e.target.value)}
+          >
+            <option value="">Select Complexity</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </label>
+        <br />
+        <button onClick={handleGenerateRecipe}>Generate Recipe</button>
+      </form>
+      {recipe.title && (
+        <div>
+          <h2>{recipe.title}</h2>
+          <p>{recipe.ingredients}</p>
+          <p>{recipe.preparation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default RecipeGenerator;
